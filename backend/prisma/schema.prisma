@@ -1,0 +1,138 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Admin {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model User {
+  id              Int                 @id @default(autoincrement())
+  telegramId      BigInt              @unique
+  username        String?
+  firstName       String?
+  lastName        String?
+  status          UserStatus          @default(ACTIVE)
+  referralCode    String              @unique
+  inviteLink      String?             @unique
+  invitedById     Int?
+  invitedBy       User?               @relation("UserReferrals", fields: [invitedById], references: [id])
+  invitees        User[]              @relation("UserReferrals")
+  referralsSent   Referral[]          @relation("ReferralsSent")
+  referralsRecv   Referral[]          @relation("ReferralsReceived")
+  taskCompletions TaskCompletion[]
+  dailyCheckins   DailyCheckin[]
+  messageCounts   GroupMessageCount[]
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+}
+
+enum UserStatus {
+  ACTIVE
+  BANNED
+  FLAGGED
+}
+
+model Referral {
+  id          Int            @id @default(autoincrement())
+  inviterId   Int
+  inviter     User           @relation("ReferralsSent", fields: [inviterId], references: [id])
+  inviteeId   Int            @unique
+  invitee     User           @relation("ReferralsReceived", fields: [inviteeId], references: [id])
+  status      ReferralStatus @default(PENDING)
+  failReason  String?
+  joinedAt    DateTime       @default(now())
+  validatedAt DateTime?
+}
+
+enum ReferralStatus {
+  PENDING
+  VALID
+  INVALID
+}
+
+model Task {
+  id             Int              @id @default(autoincrement())
+  title          String
+  description    String
+  type           TaskType
+  telegramChatId String?          // Group or channel chat ID for automated validation
+  isActive       Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  completions    TaskCompletion[]
+}
+
+enum TaskType {
+  JOIN_CHANNEL
+  SEND_MESSAGES
+  CUSTOM
+}
+
+model TaskCompletion {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  taskId      Int
+  task        Task     @relation(fields: [taskId], references: [id])
+  status      String   @default("COMPLETED")
+  completedAt DateTime @default(now())
+
+  @@unique([userId, taskId])
+}
+
+model DailyCheckin {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  checkinDate DateTime @db.Date
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, checkinDate])
+}
+
+model GroupMessageCount {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id])
+  chatId       String
+  messageCount Int      @default(0)
+  updatedAt    DateTime @updatedAt
+
+  @@unique([userId, chatId])
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+model Broadcast {
+  id        Int             @id @default(autoincrement())
+  message   String
+  target    BroadcastTarget @default(ALL)
+  status    BroadcastStatus @default(PENDING)
+  sentAt    DateTime?
+  createdAt DateTime        @default(now())
+}
+
+enum BroadcastTarget {
+  ALL
+  ACTIVE
+}
+
+enum BroadcastStatus {
+  PENDING
+  SENDING
+  SENT
+  FAILED
+}
