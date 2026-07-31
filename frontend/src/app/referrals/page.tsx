@@ -58,7 +58,7 @@ export default function ReferralsPage() {
     setActionLoading(refId);
     try {
       const token = localStorage.getItem('admin_token');
-      const response = await fetch(`http://localhost:3001/admin/referrals/${refId}/override`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/admin/referrals/${refId}/override`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

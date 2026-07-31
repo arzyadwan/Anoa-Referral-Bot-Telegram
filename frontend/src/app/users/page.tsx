@@ -59,7 +59,7 @@ export default function UsersPage() {
       if (search) queryParams.append('search', search);
       if (statusFilter) queryParams.append('status', statusFilter);
 
-      const response = await fetch(`http://localhost:3001/admin/users?${queryParams.toString()}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/admin/users?${queryParams.toString()}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -85,7 +85,7 @@ export default function UsersPage() {
     setActionLoading(userId);
     try {
       const token = localStorage.getItem('admin_token');
-      const response = await fetch(`http://localhost:3001/admin/users/${userId}/status`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/admin/users/${userId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ export default function UsersPage() {
     setInvitees([]);
     try {
       const token = localStorage.getItem('admin_token');
-      const response = await fetch(`http://localhost:3001/admin/users/${user.id}/invitees`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/admin/users/${user.id}/invitees`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

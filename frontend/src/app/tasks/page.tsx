@@ -140,7 +140,7 @@ export default function TasksPage() {
   const handleToggleTaskActive = async (task: Task) => {
     try {
       const token = localStorage.getItem('admin_token');
-      const response = await fetch(`http://localhost:3001/admin/tasks/${task.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/admin/tasks/${task.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ export default function TasksPage() {
 
     try {
       const token = localStorage.getItem('admin_token');
-      const response = await fetch(`http://localhost:3001/admin/tasks/${taskId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/admin/tasks/${taskId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
