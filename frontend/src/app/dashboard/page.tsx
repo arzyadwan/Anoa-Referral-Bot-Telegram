@@ -89,10 +89,10 @@ export default function DashboardPage() {
         fill: true,
         label: 'Anggota Baru',
         data: chartData.map((item) => item.count),
-        borderColor: '#3B82F6',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderColor: '#C59B27',
+        backgroundColor: 'rgba(197, 155, 39, 0.1)',
         tension: 0.3,
-        pointBackgroundColor: '#3B82F6',
+        pointBackgroundColor: '#C59B27',
       },
     ],
   };
@@ -105,10 +105,10 @@ export default function DashboardPage() {
         display: false,
       },
       tooltip: {
-        backgroundColor: '#1E293B',
+        backgroundColor: '#161616',
         titleColor: '#F8FAFC',
-        bodyColor: '#3B82F6',
-        borderColor: '#384252',
+        bodyColor: '#C59B27',
+        borderColor: 'rgba(197, 155, 39, 0.15)',
         borderWidth: 1,
         padding: 12,
         cornerRadius: 8,
@@ -172,29 +172,29 @@ export default function DashboardPage() {
             {/* KPI Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Card 1: Total Users */}
-              <div className="bg-[#151D30] border border-white/5 rounded-2xl p-6 flex items-center justify-between">
+              <div className="bg-[#161616] border border-white/5 rounded-2xl p-6 flex items-center justify-between">
                 <div className="space-y-2">
                   <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Anggota</span>
                   <h3 className="text-3xl font-bold tracking-tight">{kpis.totalUsers}</h3>
                 </div>
-                <div className="w-12 h-12 bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-center justify-center text-blue-400">
+                <div className="w-12 h-12 bg-[#C59B27]/10 border border-[#C59B27]/20 rounded-xl flex items-center justify-center text-[#C59B27]">
                   <Users className="w-6 h-6" />
                 </div>
               </div>
 
               {/* Card 2: Total Referrals */}
-              <div className="bg-[#151D30] border border-white/5 rounded-2xl p-6 flex items-center justify-between">
+              <div className="bg-[#161616] border border-white/5 rounded-2xl p-6 flex items-center justify-between">
                 <div className="space-y-2">
                   <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Referral</span>
                   <h3 className="text-3xl font-bold tracking-tight">{kpis.totalReferrals}</h3>
                 </div>
-                <div className="w-12 h-12 bg-indigo-500/10 border border-indigo-500/20 rounded-xl flex items-center justify-center text-indigo-400">
+                <div className="w-12 h-12 bg-[#E5C07B]/10 border border-[#E5C07B]/20 rounded-xl flex items-center justify-center text-[#E5C07B]">
                   <LinkIcon className="w-6 h-6" />
                 </div>
               </div>
 
               {/* Card 3: Validation Rate */}
-              <div className="bg-[#151D30] border border-white/5 rounded-2xl p-6 flex items-center justify-between">
+              <div className="bg-[#161616] border border-white/5 rounded-2xl p-6 flex items-center justify-between">
                 <div className="space-y-2">
                   <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Rasio Validasi</span>
                   <h3 className="text-3xl font-bold tracking-tight">{kpis.validationRate}%</h3>
@@ -205,7 +205,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Card 4: Active Users (DAU / WAU) */}
-              <div className="bg-[#151D30] border border-white/5 rounded-2xl p-6 flex items-center justify-between">
+              <div className="bg-[#161616] border border-white/5 rounded-2xl p-6 flex items-center justify-between">
                 <div className="space-y-2">
                   <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Aktif (DAU / WAU)</span>
                   <h3 className="text-3xl font-bold tracking-tight">
@@ -221,7 +221,7 @@ export default function DashboardPage() {
             {/* Validation Breakdown & Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Chart Panel */}
-              <div className="bg-[#151D30] border border-white/5 rounded-2xl p-6 lg:col-span-2">
+              <div className="bg-[#161616] border border-white/5 rounded-2xl p-6 lg:col-span-2">
                 <h4 className="text-base font-semibold mb-6">Pertumbuhan Anggota Baru (30 Hari Terakhir)</h4>
                 <div className="h-80 relative">
                   <Line data={chartConfig} options={chartOptions} />
@@ -229,7 +229,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Referral Status Card */}
-              <div className="bg-[#151D30] border border-white/5 rounded-2xl p-6 flex flex-col justify-between">
+              <div className="bg-[#161616] border border-white/5 rounded-2xl p-6 flex flex-col justify-between">
                 <div>
                   <h4 className="text-base font-semibold mb-6">Status Validasi Rujukan</h4>
                   <div className="space-y-4">

@@ -198,9 +198,9 @@ export default function TasksPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Rules Configuration Panel */}
-          <div className="bg-[#151D30] border border-white/5 rounded-2xl p-6 h-fit">
+          <div className="bg-[#161616] border border-white/5 rounded-2xl p-6 h-fit">
             <div className="flex items-center gap-3 border-b border-white/5 pb-4 mb-6">
-              <Settings className="w-5 h-5 text-blue-400" />
+              <Settings className="w-5 h-5 text-[#C59B27]" />
               <h3 className="font-semibold text-lg">Konfigurasi Aturan Validasi</h3>
             </div>
 
@@ -218,7 +218,7 @@ export default function TasksPage() {
                     value={settings.channel_username}
                     onChange={(e) => setSettings({ ...settings, channel_username: e.target.value })}
                     placeholder="@grup_anda"
-                    className="w-full bg-[#0F1422] border border-white/5 rounded-xl py-3 px-4 text-sm focus:border-blue-500 focus:outline-none transition-all"
+                    className="w-full bg-[#0F0F0F] border border-white/5 rounded-xl py-3 px-4 text-sm focus:border-[#C59B27] focus:outline-none transition-all"
                   />
                   <p className="text-xs text-gray-500 mt-1">Pengguna baru harus masuk ke channel/grup ini.</p>
                 </div>
@@ -233,7 +233,7 @@ export default function TasksPage() {
                     min="0"
                     value={settings.min_messages_count}
                     onChange={(e) => setSettings({ ...settings, min_messages_count: e.target.value })}
-                    className="w-full bg-[#0F1422] border border-white/5 rounded-xl py-3 px-4 text-sm focus:border-blue-500 focus:outline-none transition-all"
+                    className="w-full bg-[#0F0F0F] border border-white/5 rounded-xl py-3 px-4 text-sm focus:border-[#C59B27] focus:outline-none transition-all"
                   />
                   <p className="text-xs text-gray-500 mt-1">Jumlah pesan minimum yang harus dikirim di grup.</p>
                 </div>
@@ -248,7 +248,7 @@ export default function TasksPage() {
                     min="0"
                     value={settings.min_stay_hours}
                     onChange={(e) => setSettings({ ...settings, min_stay_hours: e.target.value })}
-                    className="w-full bg-[#0F1422] border border-white/5 rounded-xl py-3 px-4 text-sm focus:border-blue-500 focus:outline-none transition-all"
+                    className="w-full bg-[#0F0F0F] border border-white/5 rounded-xl py-3 px-4 text-sm focus:border-[#C59B27] focus:outline-none transition-all"
                   />
                   <p className="text-xs text-gray-500 mt-1">Lama waktu minimal pengguna harus menetap.</p>
                 </div>
@@ -256,7 +256,7 @@ export default function TasksPage() {
                 <button
                   type="submit"
                   disabled={settingsSaving}
-                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 rounded-xl transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 active:scale-[0.98]"
+                  className="w-full bg-[#C59B27] hover:bg-[#B38A1F] text-white font-medium py-3 rounded-xl transition-all shadow-lg shadow-[#C59B27]/20 flex items-center justify-center gap-2 active:scale-[0.98]"
                 >
                   <Save className="w-4 h-4" />
                   <span>{settingsSaving ? 'Menyimpan...' : 'Simpan Aturan'}</span>
@@ -268,9 +268,9 @@ export default function TasksPage() {
           {/* Tasks Panel */}
           <div className="lg:col-span-2 space-y-6">
             {/* Create Task Form */}
-            <div className="bg-[#151D30] border border-white/5 rounded-2xl p-6">
+            <div className="bg-[#161616] border border-white/5 rounded-2xl p-6">
               <div className="flex items-center gap-3 border-b border-white/5 pb-4 mb-6">
-                <Plus className="w-5 h-5 text-blue-400" />
+                <Plus className="w-5 h-5 text-[#C59B27]" />
                 <h3 className="font-semibold text-lg">Tambah Tugas Baru</h3>
               </div>
 
@@ -286,7 +286,7 @@ export default function TasksPage() {
                       value={newTitle}
                       onChange={(e) => setNewTitle(e.target.value)}
                       placeholder="Contoh: Ikuti Twitter Kami"
-                      className="w-full bg-[#0F1422] border border-white/5 rounded-xl py-3 px-4 text-sm focus:border-blue-500 focus:outline-none transition-all"
+                      className="w-full bg-[#0F0F0F] border border-white/5 rounded-xl py-3 px-4 text-sm focus:border-[#C59B27] focus:outline-none transition-all"
                     />
                   </div>
 
@@ -300,7 +300,7 @@ export default function TasksPage() {
                       onChange={(e) => setNewDescription(e.target.value)}
                       placeholder="Masukkan langkah penyelesaian atau tautan media sosial..."
                       rows={3}
-                      className="w-full bg-[#0F1422] border border-white/5 rounded-xl py-3 px-4 text-sm focus:border-blue-500 focus:outline-none transition-all resize-none"
+                      className="w-full bg-[#0F0F0F] border border-white/5 rounded-xl py-3 px-4 text-sm focus:border-[#C59B27] focus:outline-none transition-all resize-none"
                     />
                   </div>
                 </div>
@@ -313,7 +313,7 @@ export default function TasksPage() {
                     <select
                       value={newType}
                       onChange={(e) => setNewType(e.target.value as any)}
-                      className="w-full bg-[#0F1422] border border-white/5 text-gray-300 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:outline-none"
+                      className="w-full bg-[#0F0F0F] border border-white/5 text-gray-300 rounded-xl px-4 py-3 text-sm focus:border-[#C59B27] focus:outline-none"
                     >
                       <option value="JOIN_CHANNEL">Gabung Channel Telegram (Automated)</option>
                       <option value="SEND_MESSAGES">Kirim Pesan di Grup (Automated)</option>
@@ -332,7 +332,7 @@ export default function TasksPage() {
                         value={newChatId}
                         onChange={(e) => setNewChatId(e.target.value)}
                         placeholder="@channel_target"
-                        className="w-full bg-[#0F1422] border border-white/5 rounded-xl py-3 px-4 text-sm focus:border-blue-500 focus:outline-none transition-all"
+                        className="w-full bg-[#0F0F0F] border border-white/5 rounded-xl py-3 px-4 text-sm focus:border-[#C59B27] focus:outline-none transition-all"
                       />
                     </div>
                   )}
@@ -352,9 +352,9 @@ export default function TasksPage() {
             </div>
 
             {/* Tasks List */}
-            <div className="bg-[#151D30] border border-white/5 rounded-2xl p-6">
+            <div className="bg-[#161616] border border-white/5 rounded-2xl p-6">
               <div className="flex items-center gap-3 border-b border-white/5 pb-4 mb-6">
-                <ClipboardList className="w-5 h-5 text-blue-400" />
+                <ClipboardList className="w-5 h-5 text-[#C59B27]" />
                 <h3 className="font-semibold text-lg">Daftar Tugas Aktif</h3>
               </div>
 
@@ -367,14 +367,14 @@ export default function TasksPage() {
                   {tasks.map((task) => (
                     <div
                       key={task.id}
-                      className="flex items-center justify-between p-4 bg-[#0F1422] border border-white/5 rounded-xl gap-4 hover:border-white/10 transition-all"
+                      className="flex items-center justify-between p-4 bg-[#0F0F0F] border border-white/5 rounded-xl gap-4 hover:border-white/10 transition-all"
                     >
                       <div className="space-y-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <h5 className="font-semibold truncate">{task.title}</h5>
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                             task.type === 'JOIN_CHANNEL'
-                              ? 'bg-blue-500/10 text-blue-400'
+                              ? 'bg-[#C59B27]/10 text-[#C59B27]'
                               : task.type === 'SEND_MESSAGES'
                               ? 'bg-purple-500/10 text-purple-400'
                               : 'bg-yellow-500/10 text-yellow-400'

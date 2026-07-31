@@ -96,9 +96,9 @@ export default function BroadcastPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Broadcast Composer */}
-          <div className="bg-[#151D30] border border-white/5 rounded-2xl p-6 h-fit">
+          <div className="bg-[#161616] border border-white/5 rounded-2xl p-6 h-fit">
             <div className="flex items-center gap-3 border-b border-white/5 pb-4 mb-6">
-              <Megaphone className="w-5 h-5 text-blue-400" />
+              <Megaphone className="w-5 h-5 text-[#C59B27]" />
               <h3 className="font-semibold text-lg">Buat Siaran Baru</h3>
             </div>
 
@@ -110,7 +110,7 @@ export default function BroadcastPage() {
                 <select
                   value={targetAudience}
                   onChange={(e) => setTargetAudience(e.target.value as any)}
-                  className="w-full bg-[#0F1422] border border-white/5 text-gray-300 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:outline-none"
+                  className="w-full bg-[#0F0F0F] border border-white/5 text-gray-300 rounded-xl px-4 py-3 text-sm focus:border-[#C59B27] focus:outline-none"
                 >
                   <option value="ALL">Semua Pengguna Terdaftar (ALL)</option>
                   <option value="ACTIVE">Hanya Pengguna Berstatus Aktif (ACTIVE)</option>
@@ -131,14 +131,14 @@ export default function BroadcastPage() {
                   onChange={(e) => setMessageText(e.target.value)}
                   placeholder="Ketik pesan pengumuman di sini..."
                   rows={8}
-                  className="w-full bg-[#0F1422] border border-white/5 rounded-xl py-3 px-4 text-sm focus:border-blue-500 focus:outline-none transition-all resize-none"
+                  className="w-full bg-[#0F0F0F] border border-white/5 rounded-xl py-3 px-4 text-sm focus:border-[#C59B27] focus:outline-none transition-all resize-none"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={sending}
-                className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium py-3 rounded-xl transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50"
+                className="w-full bg-gradient-to-r from-[#C59B27] to-[#B38A1F] hover:from-[#B38A1F] hover:to-[#967215] text-white font-medium py-3 rounded-xl transition-all shadow-lg shadow-[#C59B27]/20 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50"
               >
                 <Send className="w-4 h-4" />
                 <span>{sending ? 'Mengirim Siaran...' : 'Kirim Siaran'}</span>
@@ -147,9 +147,9 @@ export default function BroadcastPage() {
           </div>
 
           {/* Broadcast History */}
-          <div className="lg:col-span-2 bg-[#151D30] border border-white/5 rounded-2xl p-6">
+          <div className="lg:col-span-2 bg-[#161616] border border-white/5 rounded-2xl p-6">
             <div className="flex items-center gap-3 border-b border-white/5 pb-4 mb-6">
-              <Clock className="w-5 h-5 text-blue-400" />
+              <Clock className="w-5 h-5 text-[#C59B27]" />
               <h3 className="font-semibold text-lg">Riwayat Siaran</h3>
             </div>
 

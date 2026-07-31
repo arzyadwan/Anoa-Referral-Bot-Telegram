@@ -71,9 +71,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0B0F19] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#0A0A0A] text-white flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-10 h-10 border-4 border-[#C59B27] border-t-transparent rounded-full animate-spin"></div>
           <p className="text-sm text-gray-400">Memeriksa autentikasi...</p>
         </div>
       </div>
@@ -81,14 +81,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-white flex">
+    <div className="min-h-screen bg-[#0A0A0A] text-white flex">
       {/* Sidebar for Desktop */}
-      <aside className="w-64 bg-[#111827] border-r border-white/5 flex-col justify-between hidden md:flex">
+      <aside className="w-64 bg-[#121212] border-r border-white/5 flex-col justify-between hidden md:flex">
         <div>
           {/* Logo / Header */}
-          <div className="p-6 border-b border-white/5">
-            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-              Growth Admin
+          <div className="p-6 border-b border-white/5 flex items-center gap-3">
+            <img src="/logo.jpg" alt="ANOA Logo" className="w-8 h-8 rounded-full border border-[#C59B27]/40 object-cover" />
+            <h1 className="text-xl font-bold bg-gradient-to-r from-[#C59B27] to-[#E5C07B] bg-clip-text text-transparent">
+              ANOA Dashboard
             </h1>
           </div>
 
@@ -103,7 +104,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                     isActive
-                      ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                      ? 'bg-[#C59B27]/10 text-[#C59B27] border border-[#C59B27]/20'
                       : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
                   }`}
                 >
@@ -133,10 +134,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
       {/* Mobile Header */}
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="md:hidden h-16 bg-[#111827] border-b border-white/5 flex items-center justify-between px-4 shrink-0">
-          <h1 className="text-lg font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-            Growth Admin
-          </h1>
+        <header className="md:hidden h-16 bg-[#121212] border-b border-white/5 flex items-center justify-between px-4 shrink-0">
+          <div className="flex items-center gap-2">
+            <img src="/logo.jpg" alt="ANOA Logo" className="w-7 h-7 rounded-full border border-[#C59B27]/40 object-cover" />
+            <h1 className="text-lg font-bold bg-gradient-to-r from-[#C59B27] to-[#E5C07B] bg-clip-text text-transparent">
+              ANOA Dashboard
+            </h1>
+          </div>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 text-gray-400 hover:text-white"
@@ -147,7 +151,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
         {/* Mobile Navigation overlay */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute inset-0 top-16 bg-[#0B0F19] z-50 flex flex-col justify-between p-4">
+          <div className="md:hidden absolute inset-0 top-16 bg-[#0A0A0A] z-50 flex flex-col justify-between p-4">
             <nav className="space-y-2">
               {navItems.map((item) => {
                 const Icon = item.icon;
@@ -159,7 +163,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                       isActive
-                        ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                        ? 'bg-[#C59B27]/10 text-[#C59B27] border border-[#C59B27]/20'
                         : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
                     }`}
                   >

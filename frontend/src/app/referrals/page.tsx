@@ -98,7 +98,7 @@ export default function ReferralsPage() {
         )}
 
         {/* Data Table */}
-        <div className="bg-[#151D30] border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
+        <div className="bg-[#161616] border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
           <div className="overflow-x-auto">
             {loading ? (
               <div className="p-8 text-center text-gray-400">Loading data rujukan...</div>

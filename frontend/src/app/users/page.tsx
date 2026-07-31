@@ -155,7 +155,7 @@ export default function UsersPage() {
         )}
 
         {/* Filter Toolbar */}
-        <div className="flex flex-col sm:flex-row gap-4 bg-[#151D30] border border-white/5 p-4 rounded-2xl">
+        <div className="flex flex-col sm:flex-row gap-4 bg-[#161616] border border-white/5 p-4 rounded-2xl">
           <div className="relative flex-1">
             <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
               <Search className="w-5 h-5" />
@@ -165,14 +165,14 @@ export default function UsersPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari berdasarkan username atau nama..."
-              className="w-full bg-[#0F1422] border border-white/5 rounded-xl py-3 pl-11 pr-4 text-sm focus:border-blue-500 focus:outline-none transition-all placeholder:text-gray-600"
+              className="w-full bg-[#0F0F0F] border border-white/5 rounded-xl py-3 pl-11 pr-4 text-sm focus:border-[#C59B27] focus:outline-none transition-all placeholder:text-gray-600"
             />
           </div>
 
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-[#0F1422] border border-white/5 text-gray-300 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:outline-none"
+            className="bg-[#0F0F0F] border border-white/5 text-gray-300 rounded-xl px-4 py-3 text-sm focus:border-[#C59B27] focus:outline-none"
           >
             <option value="">Semua Status</option>
             <option value="ACTIVE">Aktif</option>
@@ -182,7 +182,7 @@ export default function UsersPage() {
         </div>
 
         {/* Data Table */}
-        <div className="bg-[#151D30] border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
+        <div className="bg-[#161616] border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
           <div className="overflow-x-auto">
             {loading ? (
               <div className="p-8 text-center text-gray-400">Loading data pengguna...</div>
@@ -218,7 +218,7 @@ export default function UsersPage() {
                           </span>
                         </div>
                       </td>
-                      <td className="p-4 font-mono text-xs text-blue-400">{user.referralCode}</td>
+                      <td className="p-4 font-mono text-xs text-[#C59B27]">{user.referralCode}</td>
                       <td className="p-4">
                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${
                           user.status === 'ACTIVE'
@@ -281,8 +281,8 @@ export default function UsersPage() {
 
         {/* Selected User Slide-over Drawer */}
         {selectedUser && (
-          <div className="fixed inset-0 bg-[#0B0F19]/80 backdrop-blur-sm z-50 flex justify-end transition-all">
-            <div className="w-full max-w-2xl bg-[#151D30] border-l border-white/5 h-full p-8 flex flex-col justify-between shadow-2xl relative">
+          <div className="fixed inset-0 bg-[#0A0A0A]/80 backdrop-blur-sm z-50 flex justify-end transition-all">
+            <div className="w-full max-w-2xl bg-[#161616] border-l border-white/5 h-full p-8 flex flex-col justify-between shadow-2xl relative">
               
               {/* Close Button */}
               <button 
@@ -296,7 +296,7 @@ export default function UsersPage() {
               <div className="flex-1 overflow-y-auto space-y-8 pr-2">
                 {/* Header Profile Info */}
                 <div>
-                  <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Detail Profil</span>
+                  <span className="text-[10px] font-bold text-[#C59B27] uppercase tracking-widest">Detail Profil</span>
                   <h3 className="text-2xl font-bold mt-1">
                     {selectedUser.firstName} {selectedUser.lastName}
                   </h3>
@@ -305,14 +305,14 @@ export default function UsersPage() {
                   </p>
 
                   <div className="grid grid-cols-2 gap-4 mt-6">
-                    <div className="bg-[#0F1422] p-4 rounded-xl border border-white/5">
+                    <div className="bg-[#0F0F0F] p-4 rounded-xl border border-white/5">
                       <span className="text-xs text-gray-500 block">Kode Referral</span>
-                      <span className="font-mono text-sm text-blue-400 font-semibold mt-1 block">
+                      <span className="font-mono text-sm text-[#C59B27] font-semibold mt-1 block">
                         {selectedUser.referralCode}
                       </span>
                     </div>
 
-                    <div className="bg-[#0F1422] p-4 rounded-xl border border-white/5">
+                    <div className="bg-[#0F0F0F] p-4 rounded-xl border border-white/5">
                       <span className="text-xs text-gray-500 block">Status Akun</span>
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold mt-2 ${
                         selectedUser.status === 'ACTIVE'
@@ -330,7 +330,7 @@ export default function UsersPage() {
                 {/* Invitees Log list */}
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 border-b border-white/5 pb-3">
-                    <LinkIcon className="w-5 h-5 text-indigo-400" />
+                    <LinkIcon className="w-5 h-5 text-[#E5C07B]" />
                     <h4 className="font-semibold text-base">Daftar Orang yang Diundang</h4>
                   </div>
 
@@ -345,7 +345,7 @@ export default function UsersPage() {
                       {invitees.map((rel) => (
                         <div 
                           key={rel.id} 
-                          className="bg-[#0F1422] border border-white/5 rounded-xl p-4 flex items-center justify-between gap-4"
+                          className="bg-[#0F0F0F] border border-white/5 rounded-xl p-4 flex items-center justify-between gap-4"
                         >
                           <div>
                             <span className="font-semibold text-sm">

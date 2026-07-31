@@ -38,17 +38,18 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#0B0F19] text-white p-4">
+    <main className="flex min-h-screen items-center justify-center bg-[#0A0A0A] text-white p-4">
       {/* Background glow effects */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-blue-500/10 blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-80 h-80 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none"></div>
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-[#C59B27]/10 blur-3xl pointer-events-none"></div>
+      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-80 h-80 rounded-full bg-[#E5C07B]/10 blur-3xl pointer-events-none"></div>
 
       <div className="w-full max-w-md relative z-10">
-        <div className="bg-[#151D30]/80 backdrop-blur-md border border-white/5 rounded-2xl p-8 shadow-2xl">
+        <div className="bg-[#161616]/80 backdrop-blur-md border border-white/5 rounded-2xl p-8 shadow-2xl">
           {/* Logo / Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-              CE Growth Bot
+          <div className="text-center mb-8 flex flex-col items-center">
+            <img src="/logo.jpg" alt="ANOA Logo" className="w-20 h-20 rounded-full border border-[#C59B27]/40 object-cover shadow-lg shadow-[#C59B27]/10 mb-4" />
+            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-[#C59B27] to-[#E5C07B] bg-clip-text text-transparent">
+              ANOA Dashboard
             </h1>
             <p className="text-sm text-gray-400 mt-2">Masuk ke Dasbor Admin</p>
           </div>
@@ -75,7 +76,7 @@ export default function LoginPage() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="admin"
-                  className="w-full bg-[#0F1422] border border-white/5 rounded-xl py-3 pl-11 pr-4 text-sm focus:border-blue-500 focus:outline-none transition-all placeholder:text-gray-600"
+                  className="w-full bg-[#0F0F0F] border border-white/5 rounded-xl py-3 pl-11 pr-4 text-sm focus:border-[#C59B27] focus:outline-none transition-all placeholder:text-gray-600"
                 />
               </div>
             </div>
@@ -94,7 +95,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-[#0F1422] border border-white/5 rounded-xl py-3 pl-11 pr-4 text-sm focus:border-blue-500 focus:outline-none transition-all placeholder:text-gray-600"
+                  className="w-full bg-[#0F0F0F] border border-white/5 rounded-xl py-3 pl-11 pr-4 text-sm focus:border-[#C59B27] focus:outline-none transition-all placeholder:text-gray-600"
                 />
               </div>
             </div>
@@ -102,7 +103,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium py-3 rounded-xl transition-all shadow-lg shadow-blue-500/20 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-[#C59B27] to-[#B38A1F] hover:from-[#B38A1F] hover:to-[#967215] text-white font-medium py-3 rounded-xl transition-all shadow-lg shadow-[#C59B27]/20 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

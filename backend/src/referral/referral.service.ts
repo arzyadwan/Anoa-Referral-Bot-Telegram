@@ -101,11 +101,6 @@ export class ReferralService {
       where: { telegramId },
     });
 
-    if (user) {
-      this.logger.log(`User ${telegramId} already exists in DB, ignoring referral join.`);
-      return;
-    }
-
     // 2. Look up the inviter who owns this inviteLink
     const inviter = await this.prisma.user.findUnique({
       where: { inviteLink },
@@ -113,6 +108,38 @@ export class ReferralService {
 
     if (!inviter) {
       this.logger.warn(`No inviter found for invite link: ${inviteLink}`);
+      return;
+    }
+
+    // Avoid self-referral
+    if (inviter.telegramId === telegramId) {
+      this.logger.log(`User ${telegramId} attempted self-referral via link, ignoring.`);
+      return;
+    }
+
+    if (user) {
+      // If user exists and already has an inviter, do nothing
+      if (user.invitedById) {
+        this.logger.log(`User ${telegramId} already has an inviter, ignoring referral join.`);
+        return;
+      }
+
+      // If user exists but has no inviter, link them now!
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: { invitedById: inviter.id },
+      });
+
+      // Create the referral relation
+      await this.prisma.referral.create({
+        data: {
+          inviterId: inviter.id,
+          inviteeId: user.id,
+          status: 'PENDING',
+        },
+      });
+
+      this.logger.log(`Linked existing user ${telegramId} to inviter ${inviter.id} via invite link`);
       return;
     }
 

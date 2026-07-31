@@ -35,9 +35,12 @@ export class BotService implements OnModuleInit {
 
       this.setupHandlers();
       
+      // Clear webhook first to ensure polling works
+      await this.bot.telegram.deleteWebhook({ drop_pending_updates: true });
+
       // Start polling
       this.bot.launch({
-        allowedUpdates: ['message', 'callback_query', 'chat_member', 'my_chat_member'],
+        allowedUpdates: ['message', 'callback_query', 'chat_member', 'my_chat_member', 'chat_join_request'],
       }).catch((err) => {
         this.logger.error(`Bot launch failed: ${err.message}`);
       });
@@ -121,6 +124,11 @@ export class BotService implements OnModuleInit {
     this.bot.on('chat_member', async (ctx, next) => {
       const chatMember = ctx.chatMember;
       const chat = ctx.chat;
+      
+      if (chatMember) {
+        this.logger.log(`[DEBUG] chat_member event. User ID: ${chatMember.new_chat_member?.user?.id}. Status: ${chatMember.old_chat_member?.status} -> ${chatMember.new_chat_member?.status}. Link used: ${chatMember.invite_link?.invite_link || 'none'}`);
+      }
+
       if (!chatMember || !chat) return next();
 
       const oldStatus = chatMember.old_chat_member.status;
@@ -148,6 +156,37 @@ export class BotService implements OnModuleInit {
           } catch (err: any) {
             this.logger.error(`Error processing join via invite link: ${err.message}`);
           }
+        }
+      }
+      return next();
+    });
+
+    // Listen to chat_join_request updates (when group requires admin approval)
+    this.bot.on('chat_join_request', async (ctx, next) => {
+      const request = ctx.chatJoinRequest;
+      if (!request) return next();
+
+      const userTelegram = request.from;
+      const inviteLinkObj = request.invite_link;
+
+      this.logger.log(`[DEBUG] chat_join_request event. User ID: ${userTelegram.id}. Link used: ${inviteLinkObj?.invite_link || 'none'}`);
+
+      if (inviteLinkObj) {
+        const inviteUrl = inviteLinkObj.invite_link;
+        try {
+          await this.referralService.registerReferralViaLink(
+            BigInt(userTelegram.id),
+            inviteUrl,
+            userTelegram.username || undefined,
+            userTelegram.first_name || undefined,
+            userTelegram.last_name || undefined,
+          );
+          
+          // Auto-approve the request
+          await ctx.approveChatJoinRequest(userTelegram.id);
+          this.logger.log(`Auto-approved join request for user ${userTelegram.id} via invite link`);
+        } catch (err: any) {
+          this.logger.error(`Error processing chat join request: ${err.message}`);
         }
       }
       return next();
@@ -219,9 +258,11 @@ export class BotService implements OnModuleInit {
       }
 
       await ctx.reply(
-        `🔗 *Tautan Undangan Grup Anda*:\n\`${inviteUrl}\`\n\n` +
+        `🔗 <b>Tautan Undangan Grup Anda</b>:\n` +
+        `<code>${inviteUrl}</code>\n\n` +
+        `👉 <a href="${inviteUrl}">Klik di sini untuk bergabung</a>\n\n` +
         `Sebarkan tautan ini kepada teman-teman Anda! Mereka akan langsung masuk ke grup Telegram dan terdaftar sebagai rujukan Anda.`,
-        { parse_mode: 'Markdown' }
+        { parse_mode: 'HTML', disable_web_page_preview: true }
       );
     } catch (err) {
       this.logger.error(`Error in handleReferralLink: ${err.message}`);
