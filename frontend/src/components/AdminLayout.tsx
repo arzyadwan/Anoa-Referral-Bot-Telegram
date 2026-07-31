@@ -35,7 +35,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       }
 
       try {
-        const response = await fetch('http://localhost:3001/auth/profile', {
+        const response = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/auth/profile', {
           headers: { Authorization: `Bearer ${token}` },
         });
 

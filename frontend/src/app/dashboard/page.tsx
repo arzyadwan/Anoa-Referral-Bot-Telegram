@@ -61,7 +61,7 @@ export default function DashboardPage() {
     const fetchAnalytics = async () => {
       try {
         const token = localStorage.getItem('admin_token');
-        const response = await fetch('http://localhost:3001/admin/analytics', {
+        const response = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/admin/analytics', {
           headers: { Authorization: `Bearer ${token}` },
         });
 

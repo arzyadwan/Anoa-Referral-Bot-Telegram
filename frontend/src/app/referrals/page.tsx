@@ -33,7 +33,7 @@ export default function ReferralsPage() {
   const fetchReferrals = async () => {
     try {
       const token = localStorage.getItem('admin_token');
-      const response = await fetch('http://localhost:3001/admin/referrals', {
+      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/admin/referrals', {
         headers: { Authorization: `Bearer ${token}` },
       });
 

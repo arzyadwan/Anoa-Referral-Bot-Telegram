@@ -41,7 +41,7 @@ export default function TasksPage() {
       const token = localStorage.getItem('admin_token');
       
       // Fetch Settings
-      const settingsRes = await fetch('http://localhost:3001/admin/settings', {
+      const settingsRes = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/admin/settings', {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (settingsRes.ok) {
@@ -51,7 +51,7 @@ export default function TasksPage() {
       setSettingsLoading(false);
 
       // Fetch Tasks
-      const tasksRes = await fetch('http://localhost:3001/admin/tasks', {
+      const tasksRes = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/admin/tasks', {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (tasksRes.ok) {
@@ -75,7 +75,7 @@ export default function TasksPage() {
     setSettingsSaving(true);
     try {
       const token = localStorage.getItem('admin_token');
-      const response = await fetch('http://localhost:3001/admin/settings', {
+      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/admin/settings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ export default function TasksPage() {
     setTaskCreating(true);
     try {
       const token = localStorage.getItem('admin_token');
-      const response = await fetch('http://localhost:3001/admin/tasks', {
+      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/admin/tasks', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

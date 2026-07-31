@@ -26,7 +26,7 @@ export default function BroadcastPage() {
   const fetchBroadcasts = async () => {
     try {
       const token = localStorage.getItem('admin_token');
-      const response = await fetch('http://localhost:3001/admin/broadcasts', {
+      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/admin/broadcasts', {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -56,7 +56,7 @@ export default function BroadcastPage() {
     setSending(true);
     try {
       const token = localStorage.getItem('admin_token');
-      const response = await fetch('http://localhost:3001/admin/broadcast', {
+      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/admin/broadcast', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
