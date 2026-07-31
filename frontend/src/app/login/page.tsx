@@ -48,10 +48,15 @@ export default function LoginPage() {
           {/* Logo / Header */}
           <div className="text-center mb-8 flex flex-col items-center">
             <img src="/logo.jpg" alt="ANOA Logo" className="w-20 h-20 rounded-full border border-[#C59B27]/40 object-cover shadow-lg shadow-[#C59B27]/10 mb-4" />
-            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-[#C59B27] to-[#E5C07B] bg-clip-text text-transparent">
-              ANOA Dashboard
-            </h1>
-            <p className="text-sm text-gray-400 mt-2">Masuk ke Dasbor Admin</p>
+            <div className="flex flex-col items-center">
+              <span className="text-3xl font-black tracking-[0.15em] bg-gradient-to-r from-[#C59B27] via-[#E5C07B] to-[#C59B27] bg-clip-text text-transparent uppercase leading-none">
+                ANOA
+              </span>
+              <span className="text-[12px] font-bold tracking-[0.3em] text-[#E5C07B]/80 uppercase mt-2">
+                Dashboard
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 mt-4 tracking-wider uppercase">Masuk ke Dasbor Admin</p>
           </div>
 
           {error && (

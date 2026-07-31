@@ -87,10 +87,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <div>
           {/* Logo / Header */}
           <div className="p-6 border-b border-white/5 flex items-center gap-3">
-            <img src="/logo.jpg" alt="ANOA Logo" className="w-8 h-8 rounded-full border border-[#C59B27]/40 object-cover" />
-            <h1 className="text-xl font-bold bg-gradient-to-r from-[#C59B27] to-[#E5C07B] bg-clip-text text-transparent">
-              ANOA Dashboard
-            </h1>
+            <img src="/logo.jpg" alt="ANOA Logo" className="w-10 h-10 rounded-full border border-[#C59B27]/40 object-cover" />
+            <div className="flex flex-col">
+              <span className="text-lg font-black tracking-wider bg-gradient-to-r from-[#C59B27] via-[#E5C07B] to-[#C59B27] bg-clip-text text-transparent uppercase leading-none">
+                ANOA
+              </span>
+              <span className="text-[10px] font-bold tracking-[0.22em] text-[#E5C07B]/80 uppercase mt-1">
+                Dashboard
+              </span>
+            </div>
           </div>
 
           {/* Navigation Links */}
@@ -136,10 +141,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       <div className="flex-1 flex flex-col min-w-0">
         <header className="md:hidden h-16 bg-[#121212] border-b border-white/5 flex items-center justify-between px-4 shrink-0">
           <div className="flex items-center gap-2">
-            <img src="/logo.jpg" alt="ANOA Logo" className="w-7 h-7 rounded-full border border-[#C59B27]/40 object-cover" />
-            <h1 className="text-lg font-bold bg-gradient-to-r from-[#C59B27] to-[#E5C07B] bg-clip-text text-transparent">
-              ANOA Dashboard
-            </h1>
+            <img src="/logo.jpg" alt="ANOA Logo" className="w-8 h-8 rounded-full border border-[#C59B27]/40 object-cover" />
+            <div className="flex flex-col">
+              <span className="text-sm font-black tracking-wider bg-gradient-to-r from-[#C59B27] via-[#E5C07B] to-[#C59B27] bg-clip-text text-transparent uppercase leading-none">
+                ANOA
+              </span>
+              <span className="text-[8px] font-bold tracking-[0.2em] text-[#E5C07B]/80 uppercase">
+                Dashboard
+              </span>
+            </div>
           </div>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
