@@ -1,19 +1,20 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import Link from 'next/link';
-import { 
-  LayoutDashboard, 
-  Users, 
-  Link2, 
-  CheckSquare, 
-  Megaphone, 
-  LogOut, 
-  Menu, 
+import { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  LayoutDashboard,
+  Users,
+  Link2,
+  CheckSquare,
+  Megaphone,
+  LogOut,
+  Menu,
   X,
-  User as UserIcon
-} from 'lucide-react';
+  User as UserIcon,
+} from "lucide-react";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -28,26 +29,30 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('admin_token');
+      const token = localStorage.getItem("admin_token");
       if (!token) {
-        router.push('/login');
+        router.push("/login");
         return;
       }
 
       try {
-        const response = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/auth/profile', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await fetch(
+          (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001") +
+            "/auth/profile",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
 
         if (!response.ok) {
-          throw new Error('Unauthorized');
+          throw new Error("Unauthorized");
         }
 
         const data = await response.json();
         setAdminUser(data.username);
-      } catch (err) {
-        localStorage.removeItem('admin_token');
-        router.push('/login');
+      } catch {
+        localStorage.removeItem("admin_token");
+        router.push("/login");
       } finally {
         setLoading(false);
       }
@@ -57,16 +62,16 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem('admin_token');
-    router.push('/login');
+    localStorage.removeItem("admin_token");
+    router.push("/login");
   };
 
   const navItems = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Pengguna', href: '/users', icon: Users },
-    { name: 'Rujukan (Referrals)', href: '/referrals', icon: Link2 },
-    { name: 'Tugas & Aturan', href: '/tasks', icon: CheckSquare },
-    { name: 'Siaran (Broadcast)', href: '/broadcast', icon: Megaphone },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Pengguna", href: "/users", icon: Users },
+    { name: "Rujukan (Referrals)", href: "/referrals", icon: Link2 },
+    { name: "Tugas & Aturan", href: "/tasks", icon: CheckSquare },
+    { name: "Siaran (Broadcast)", href: "/broadcast", icon: Megaphone },
   ];
 
   if (loading) {
@@ -87,7 +92,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <div>
           {/* Logo / Header */}
           <div className="p-6 border-b border-white/5 flex items-center gap-3">
-            <img src="/logo.jpg" alt="ANOA Logo" className="w-10 h-10 rounded-full border border-[#C59B27]/40 object-cover" />
+            <Image
+              src="/logo.jpg"
+              alt="ANOA Logo"
+              width={40}
+              height={40}
+              className="w-10 h-10 rounded-full border border-[#C59B27]/40 object-cover"
+            />
             <div className="flex flex-col">
               <span className="text-lg font-black tracking-wider bg-gradient-to-r from-[#C59B27] via-[#E5C07B] to-[#C59B27] bg-clip-text text-transparent uppercase leading-none">
                 ANOA
@@ -109,8 +120,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                     isActive
-                      ? 'bg-[#C59B27]/10 text-[#C59B27] border border-[#C59B27]/20'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
+                      ? "bg-[#C59B27]/10 text-[#C59B27] border border-[#C59B27]/20"
+                      : "text-gray-400 hover:text-white hover:bg-white/5 border border-transparent"
                   }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -141,7 +152,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       <div className="flex-1 flex flex-col min-w-0">
         <header className="md:hidden h-16 bg-[#121212] border-b border-white/5 flex items-center justify-between px-4 shrink-0">
           <div className="flex items-center gap-2">
-            <img src="/logo.jpg" alt="ANOA Logo" className="w-8 h-8 rounded-full border border-[#C59B27]/40 object-cover" />
+            <Image
+              src="/logo.jpg"
+              alt="ANOA Logo"
+              width={32}
+              height={32}
+              className="w-8 h-8 rounded-full border border-[#C59B27]/40 object-cover"
+            />
             <div className="flex flex-col">
               <span className="text-sm font-black tracking-wider bg-gradient-to-r from-[#C59B27] via-[#E5C07B] to-[#C59B27] bg-clip-text text-transparent uppercase leading-none">
                 ANOA
@@ -155,7 +172,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 text-gray-400 hover:text-white"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </header>
 
@@ -173,8 +194,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                       isActive
-                        ? 'bg-[#C59B27]/10 text-[#C59B27] border border-[#C59B27]/20'
-                        : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
+                        ? "bg-[#C59B27]/10 text-[#C59B27] border border-[#C59B27]/20"
+                        : "text-gray-400 hover:text-white hover:bg-white/5 border border-transparent"
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -201,9 +222,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         )}
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-auto p-6 md:p-8">
-          {children}
-        </main>
+        <main className="flex-1 overflow-auto p-6 md:p-8">{children}</main>
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ export class AuthService {
     const admin = await this.prisma.admin.findUnique({
       where: { username },
     });
-    
+
     if (!admin) {
       throw new UnauthorizedException('Invalid credentials');
     }

@@ -20,7 +20,9 @@ export class BotService implements OnModuleInit {
     const token = this.configService.get<string>('TELEGRAM_BOT_TOKEN');
 
     if (!token || token === 'PLACEHOLDER_BOT_TOKEN') {
-      this.logger.warn('TELEGRAM_BOT_TOKEN is not configured or is set to placeholder. Bot will not start.');
+      this.logger.warn(
+        'TELEGRAM_BOT_TOKEN is not configured or is set to placeholder. Bot will not start.',
+      );
       return;
     }
 
@@ -34,16 +36,24 @@ export class BotService implements OnModuleInit {
       this.logger.log(`Telegram Bot @${this.botUsername} is starting...`);
 
       this.setupHandlers();
-      
+
       // Clear webhook first to ensure polling works
       await this.bot.telegram.deleteWebhook({ drop_pending_updates: true });
 
       // Start polling
-      this.bot.launch({
-        allowedUpdates: ['message', 'callback_query', 'chat_member', 'my_chat_member', 'chat_join_request'],
-      }).catch((err) => {
-        this.logger.error(`Bot launch failed: ${err.message}`);
-      });
+      this.bot
+        .launch({
+          allowedUpdates: [
+            'message',
+            'callback_query',
+            'chat_member',
+            'my_chat_member',
+            'chat_join_request',
+          ],
+        })
+        .catch((err) => {
+          this.logger.error(`Bot launch failed: ${err.message}`);
+        });
 
       this.logger.log('Telegram Bot successfully launched.');
     } catch (e) {
@@ -61,7 +71,7 @@ export class BotService implements OnModuleInit {
       if (!from) return;
 
       try {
-        const { user, isNew } = await this.referralService.registerUser(
+        const { isNew } = await this.referralService.registerUser(
           BigInt(from.id),
           from.username,
           from.first_name,
@@ -70,21 +80,25 @@ export class BotService implements OnModuleInit {
         );
 
         let welcomeMessage = `👋 Halo ${from.first_name || 'User'}! Selamat datang di Community Growth Bot.\n\n`;
-        
+
         if (isNew && payload) {
-          welcomeMessage += `🎉 Anda berhasil bergabung menggunakan tautan rujukan!\n\n` +
+          welcomeMessage +=
+            `🎉 Anda berhasil bergabung menggunakan tautan rujukan!\n\n` +
             `👉 *Langkah selanjutnya*: Silakan bergabung dengan grup resmi kami di bawah ini untuk memenuhi syarat validasi rujukan Anda.`;
-          
+
           await ctx.reply(welcomeMessage, {
             parse_mode: 'Markdown',
             ...Markup.inlineKeyboard([
-              Markup.button.url('👉 Gabung Grup ANOA Token', 'https://t.me/ANOAtoken')
-            ])
+              Markup.button.url(
+                '👉 Gabung Grup ANOA Token',
+                'https://t.me/ANOAtoken',
+              ),
+            ]),
           });
 
           await ctx.reply(
             `Gunakan menu di bawah ini untuk melihat statistik rujukan, daftar tugas, check-in harian, dan papan peringkat.`,
-            this.getMainMenuMarkup()
+            this.getMainMenuMarkup(),
           );
         } else {
           if (isNew) {
@@ -93,12 +107,14 @@ export class BotService implements OnModuleInit {
             welcomeMessage += `Senang melihat Anda kembali!\n\n`;
           }
           welcomeMessage += `Gunakan menu di bawah ini untuk melihat statistik rujukan, daftar tugas, check-in harian, dan papan peringkat.`;
-          
+
           await ctx.reply(welcomeMessage, this.getMainMenuMarkup());
         }
       } catch (err) {
         this.logger.error(`Error in start handler: ${err.message}`);
-        await ctx.reply('Terjadi kesalahan saat memproses pendaftaran Anda. Silakan coba beberapa saat lagi.');
+        await ctx.reply(
+          'Terjadi kesalahan saat memproses pendaftaran Anda. Silakan coba beberapa saat lagi.',
+        );
       }
     });
 
@@ -112,7 +128,10 @@ export class BotService implements OnModuleInit {
       // Check if message is from group or supergroup
       if (['group', 'supergroup'].includes(chat.type)) {
         try {
-          await this.referralService.recordMessage(BigInt(from.id), String(chat.id));
+          await this.referralService.recordMessage(
+            BigInt(from.id),
+            String(chat.id),
+          );
         } catch (err) {
           this.logger.error(`Error updating message count: ${err.message}`);
         }
@@ -124,9 +143,11 @@ export class BotService implements OnModuleInit {
     this.bot.on('chat_member', async (ctx, next) => {
       const chatMember = ctx.chatMember;
       const chat = ctx.chat;
-      
+
       if (chatMember) {
-        this.logger.log(`[DEBUG] chat_member event. User ID: ${chatMember.new_chat_member?.user?.id}. Status: ${chatMember.old_chat_member?.status} -> ${chatMember.new_chat_member?.status}. Link used: ${chatMember.invite_link?.invite_link || 'none'}`);
+        this.logger.log(
+          `[DEBUG] chat_member event. User ID: ${chatMember.new_chat_member?.user?.id}. Status: ${chatMember.old_chat_member?.status} -> ${chatMember.new_chat_member?.status}. Link used: ${chatMember.invite_link?.invite_link || 'none'}`,
+        );
       }
 
       if (!chatMember || !chat) return next();
@@ -134,8 +155,12 @@ export class BotService implements OnModuleInit {
       const oldStatus = chatMember.old_chat_member.status;
       const newStatus = chatMember.new_chat_member.status;
 
-      const wasMember = ['member', 'administrator', 'creator'].includes(oldStatus);
-      const isMember = ['member', 'administrator', 'creator'].includes(newStatus);
+      const wasMember = ['member', 'administrator', 'creator'].includes(
+        oldStatus,
+      );
+      const isMember = ['member', 'administrator', 'creator'].includes(
+        newStatus,
+      );
 
       if (!wasMember && isMember) {
         const userTelegram = chatMember.new_chat_member.user;
@@ -143,7 +168,9 @@ export class BotService implements OnModuleInit {
 
         if (inviteLinkObj) {
           const inviteUrl = inviteLinkObj.invite_link;
-          this.logger.log(`User ${userTelegram.id} joined group ${chat.id} via invite link: ${inviteUrl}`);
+          this.logger.log(
+            `User ${userTelegram.id} joined group ${chat.id} via invite link: ${inviteUrl}`,
+          );
 
           try {
             await this.referralService.registerReferralViaLink(
@@ -154,7 +181,9 @@ export class BotService implements OnModuleInit {
               userTelegram.last_name || undefined,
             );
           } catch (err: any) {
-            this.logger.error(`Error processing join via invite link: ${err.message}`);
+            this.logger.error(
+              `Error processing join via invite link: ${err.message}`,
+            );
           }
         }
       }
@@ -169,7 +198,9 @@ export class BotService implements OnModuleInit {
       const userTelegram = request.from;
       const inviteLinkObj = request.invite_link;
 
-      this.logger.log(`[DEBUG] chat_join_request event. User ID: ${userTelegram.id}. Link used: ${inviteLinkObj?.invite_link || 'none'}`);
+      this.logger.log(
+        `[DEBUG] chat_join_request event. User ID: ${userTelegram.id}. Link used: ${inviteLinkObj?.invite_link || 'none'}`,
+      );
 
       if (inviteLinkObj) {
         const inviteUrl = inviteLinkObj.invite_link;
@@ -181,23 +212,37 @@ export class BotService implements OnModuleInit {
             userTelegram.first_name || undefined,
             userTelegram.last_name || undefined,
           );
-          
+
           // Auto-approve the request
           await ctx.approveChatJoinRequest(userTelegram.id);
-          this.logger.log(`Auto-approved join request for user ${userTelegram.id} via invite link`);
+          this.logger.log(
+            `Auto-approved join request for user ${userTelegram.id} via invite link`,
+          );
         } catch (err: any) {
-          this.logger.error(`Error processing chat join request: ${err.message}`);
+          this.logger.error(
+            `Error processing chat join request: ${err.message}`,
+          );
         }
       }
       return next();
     });
 
     // Listen to text menu clicks (Fallback if client uses custom keyboards)
-    this.bot.hears('🔗 Tautan Referral Saya', async (ctx) => this.handleReferralLink(ctx));
-    this.bot.hears('📊 Statistik Rujukan', async (ctx) => this.handleStats(ctx));
-    this.bot.hears('📋 Daftar Tugas (Tasks)', async (ctx) => this.handleTasks(ctx));
-    this.bot.hears('📅 Daily Check-in', async (ctx) => this.handleDailyCheckin(ctx));
-    this.bot.hears('🏆 Leaderboard', async (ctx) => this.handleLeaderboard(ctx));
+    this.bot.hears('🔗 Tautan Referral Saya', async (ctx) =>
+      this.handleReferralLink(ctx),
+    );
+    this.bot.hears('📊 Statistik Rujukan', async (ctx) =>
+      this.handleStats(ctx),
+    );
+    this.bot.hears('📋 Daftar Tugas (Tasks)', async (ctx) =>
+      this.handleTasks(ctx),
+    );
+    this.bot.hears('📅 Daily Check-in', async (ctx) =>
+      this.handleDailyCheckin(ctx),
+    );
+    this.bot.hears('🏆 Leaderboard', async (ctx) =>
+      this.handleLeaderboard(ctx),
+    );
 
     // Handle Callback Queries (Inline buttons)
     this.bot.on('callback_query', async (ctx) => {
@@ -215,7 +260,7 @@ export class BotService implements OnModuleInit {
     return Markup.keyboard([
       ['🔗 Tautan Referral Saya', '📊 Statistik Rujukan'],
       ['📋 Daftar Tugas (Tasks)', '📅 Daily Check-in'],
-      ['🏆 Leaderboard']
+      ['🏆 Leaderboard'],
     ]).resize();
   }
 
@@ -226,7 +271,9 @@ export class BotService implements OnModuleInit {
     try {
       const stats = await this.referralService.getUserStats(BigInt(from.id));
       if (!stats) {
-        return ctx.reply('Silakan panggil /start terlebih dahulu untuk mendaftar.');
+        return ctx.reply(
+          'Silakan panggil /start terlebih dahulu untuk mendaftar.',
+        );
       }
 
       let inviteUrl = stats.inviteLink;
@@ -236,33 +283,39 @@ export class BotService implements OnModuleInit {
           where: { key: 'channel_username' },
         });
 
-        const targetChat = channelSetting ? channelSetting.value : '@test_channel';
-        
+        const targetChat = channelSetting
+          ? channelSetting.value
+          : '@test_channel';
+
         try {
           const linkObj = await ctx.telegram.createChatInviteLink(targetChat, {
             name: stats.referralCode,
           });
-          
+
           inviteUrl = linkObj.invite_link;
-          
+
           await this.prisma.user.update({
             where: { id: stats.id },
             data: { inviteLink: inviteUrl },
           });
 
-          this.logger.log(`Created unique group invite link for User ${from.id}: ${inviteUrl}`);
+          this.logger.log(
+            `Created unique group invite link for User ${from.id}: ${inviteUrl}`,
+          );
         } catch (err: any) {
-          this.logger.warn(`Failed to create unique invite link for user ${from.id}: ${err.message}. Falling back to bot deep link.`);
+          this.logger.warn(
+            `Failed to create unique invite link for user ${from.id}: ${err.message}. Falling back to bot deep link.`,
+          );
           inviteUrl = `https://t.me/${this.botUsername}?start=${stats.referralCode}`;
         }
       }
 
       await ctx.reply(
         `🔗 <b>Tautan Undangan Grup Anda</b>:\n` +
-        `<code>${inviteUrl}</code>\n\n` +
-        `👉 <a href="${inviteUrl}">Klik di sini untuk bergabung</a>\n\n` +
-        `Sebarkan tautan ini kepada teman-teman Anda! Mereka akan langsung masuk ke grup Telegram dan terdaftar sebagai rujukan Anda.`,
-        { parse_mode: 'HTML', disable_web_page_preview: true }
+          `<code>${inviteUrl}</code>\n\n` +
+          `👉 <a href="${inviteUrl}">Klik di sini untuk bergabung</a>\n\n` +
+          `Sebarkan tautan ini kepada teman-teman Anda! Mereka akan langsung masuk ke grup Telegram dan terdaftar sebagai rujukan Anda.`,
+        { parse_mode: 'HTML', disable_web_page_preview: true },
       );
     } catch (err) {
       this.logger.error(`Error in handleReferralLink: ${err.message}`);
@@ -276,10 +329,13 @@ export class BotService implements OnModuleInit {
     try {
       const stats = await this.referralService.getUserStats(BigInt(from.id));
       if (!stats) {
-        return ctx.reply('Silakan panggil /start terlebih dahulu untuk mendaftar.');
+        return ctx.reply(
+          'Silakan panggil /start terlebih dahulu untuk mendaftar.',
+        );
       }
 
-      const message = `📊 *Statistik Rujukan Anda*:\n\n` +
+      const message =
+        `📊 *Statistik Rujukan Anda*:\n\n` +
         `• *Rujukan Valid*: ${stats.valid} (Telah memenuhi semua kriteria)\n` +
         `• *Rujukan Pending*: ${stats.pending} (Masih diproses/menunggu syarat)\n` +
         `• *Rujukan Invalid*: ${stats.invalid} (Gagal validasi)\n\n` +
@@ -301,7 +357,9 @@ export class BotService implements OnModuleInit {
       });
 
       if (!user) {
-        return ctx.reply('Silakan panggil /start terlebih dahulu untuk mendaftar.');
+        return ctx.reply(
+          'Silakan panggil /start terlebih dahulu untuk mendaftar.',
+        );
       }
 
       const activeTasks = await this.prisma.task.findMany({
@@ -328,7 +386,10 @@ export class BotService implements OnModuleInit {
 
         if (!isCompleted) {
           inlineButtons.push(
-            Markup.button.callback(`Periksa: ${task.title}`, `check_task_${task.id}`)
+            Markup.button.callback(
+              `Periksa: ${task.title}`,
+              `check_task_${task.id}`,
+            ),
           );
         }
       }
@@ -337,10 +398,13 @@ export class BotService implements OnModuleInit {
         // Chunk inline buttons
         await ctx.reply(msg, {
           parse_mode: 'Markdown',
-          ...Markup.inlineKeyboard(inlineButtons, { columns: 1 })
+          ...Markup.inlineKeyboard(inlineButtons, { columns: 1 }),
         });
       } else {
-        await ctx.reply(msg + `🎉 Luar biasa! Anda telah menyelesaikan semua tugas aktif.`, { parse_mode: 'Markdown' });
+        await ctx.reply(
+          msg + `🎉 Luar biasa! Anda telah menyelesaikan semua tugas aktif.`,
+          { parse_mode: 'Markdown' },
+        );
       }
     } catch (err) {
       this.logger.error(`Error in handleTasks: ${err.message}`);
@@ -378,9 +442,14 @@ export class BotService implements OnModuleInit {
 
       if (task.type === 'JOIN_CHANNEL' && task.telegramChatId) {
         try {
-          const memberInfo = await ctx.telegram.getChatMember(task.telegramChatId, from.id);
-          isValidated = ['member', 'administrator', 'creator'].includes(memberInfo.status);
-        } catch (e) {
+          const memberInfo = await ctx.telegram.getChatMember(
+            task.telegramChatId,
+            from.id,
+          );
+          isValidated = ['member', 'administrator', 'creator'].includes(
+            memberInfo.status,
+          );
+        } catch {
           isValidated = false;
         }
       } else {
@@ -396,12 +465,17 @@ export class BotService implements OnModuleInit {
             status: 'COMPLETED',
           },
         });
-        await ctx.answerCbQuery('✅ Selamat! Tugas berhasil diselesaikan.', { show_alert: true });
+        await ctx.answerCbQuery('✅ Selamat! Tugas berhasil diselesaikan.', {
+          show_alert: true,
+        });
         // Refresh tasks message
         await ctx.deleteMessage().catch(() => {});
         await this.handleTasks(ctx);
       } else {
-        await ctx.answerCbQuery('❌ Anda belum memenuhi persyaratan tugas ini.', { show_alert: true });
+        await ctx.answerCbQuery(
+          '❌ Anda belum memenuhi persyaratan tugas ini.',
+          { show_alert: true },
+        );
       }
     } catch (err) {
       this.logger.error(`Error checking task: ${err.message}`);
@@ -414,7 +488,9 @@ export class BotService implements OnModuleInit {
     if (!from) return;
 
     try {
-      const res = await this.referralService.recordDailyCheckin(BigInt(from.id));
+      const res = await this.referralService.recordDailyCheckin(
+        BigInt(from.id),
+      );
       await ctx.reply(res.message);
     } catch (err) {
       this.logger.error(`Error in checkin: ${err.message}`);
@@ -425,12 +501,21 @@ export class BotService implements OnModuleInit {
     try {
       const leaderboard = await this.referralService.getReferralLeaderboard();
       if (leaderboard.length === 0) {
-        return ctx.reply('Belum ada rujukan valid yang terdaftar untuk papan peringkat.');
+        return ctx.reply(
+          'Belum ada rujukan valid yang terdaftar untuk papan peringkat.',
+        );
       }
 
       let msg = `🏆 *Papan Peringkat Rujukan Teratas* (Berdasarkan Referral Valid):\n\n`;
       leaderboard.forEach((item, index) => {
-        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`;
+        const medal =
+          index === 0
+            ? '🥇'
+            : index === 1
+              ? '🥈'
+              : index === 2
+                ? '🥉'
+                : `${index + 1}.`;
         msg += `${medal} *${item.username}* - ${item.validCount} referral valid\n`;
       });
 
@@ -442,7 +527,7 @@ export class BotService implements OnModuleInit {
 
   async broadcastMessage(message: string, target: 'ALL' | 'ACTIVE') {
     if (!this.bot) throw new Error('Telegram Bot is not initialized');
-    
+
     const users = await this.prisma.user.findMany({
       where: target === 'ACTIVE' ? { status: 'ACTIVE' } : {},
     });
@@ -454,7 +539,7 @@ export class BotService implements OnModuleInit {
       try {
         await this.bot.telegram.sendMessage(Number(u.telegramId), message);
         success++;
-      } catch (err) {
+      } catch {
         failed++;
       }
     }

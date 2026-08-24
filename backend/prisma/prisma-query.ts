@@ -20,7 +20,7 @@ async function main() {
   // 2. Update setting
   const updatedSetting = await prisma.setting.update({
     where: { key: 'channel_username' },
-    data: { value: '@ANOAtoken' }
+    data: { value: '@ANOAtoken' },
   });
   console.log(`Updated channel_username setting to: ${updatedSetting.value}`);
 }

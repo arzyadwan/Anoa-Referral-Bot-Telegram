@@ -11,9 +11,12 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  const defaultUsername = 'admin';
-  const defaultPassword = 'adminpassword';
-  
+  const defaultUsername = process.env.ADMIN_USERNAME || 'admin';
+  const defaultPassword = process.env.ADMIN_PASSWORD;
+
+  if (!defaultPassword) {
+    throw new Error('ADMIN_PASSWORD must be set before running the seed.');
+  }
   const existingAdmin = await prisma.admin.findUnique({
     where: { username: defaultUsername },
   });
@@ -26,7 +29,9 @@ async function main() {
         passwordHash,
       },
     });
-    console.log('Default admin created (username: admin, password: adminpassword)');
+    console.log(
+      'Default admin created (username: admin, password: adminpassword)',
+    );
   } else {
     console.log('Admin already exists');
   }

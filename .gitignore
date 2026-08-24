@@ -21,3 +21,7 @@ lerna-debug.log*
 task-*.log
 *.db
 *.db-journal
+
+# Local tooling and deployment metadata
+graphify-out/
+.vercel/

@@ -105,15 +105,19 @@ Buat berkas `.env` di folder `backend/` dengan parameter berikut:
 ```env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/ce_referral_db?schema=public"
 JWT_SECRET="super-secret-jwt-key"
-TELEGRAM_BOT_TOKEN="8632060846:AAH0mlH-_34HzUg3SwD00HCo62hpNkTT9kI"
+TELEGRAM_BOT_TOKEN="put-your-telegram-bot-token-here"
+ADMIN_USERNAME="admin"
+ADMIN_PASSWORD="put-a-strong-admin-password-here"
 PORT=3001
 ```
+
+> Jangan commit token Telegram, password database, atau JWT secret ke repository.
 
 ### 2. Jalankan Migrasi & Seeding Database
 Jalankan perintah berikut di folder `backend/`:
 ```bash
-# Sinkronkan skema database
-npx prisma db push --accept-data-loss
+# Terapkan migration yang sudah di-commit
+npx prisma migrate deploy
 
 # Jalankan Seeding untuk data awal admin & pengaturan default
 npx prisma db seed
@@ -138,4 +142,6 @@ npm run dev
 
 Buka dasbor admin di browser Anda: [http://localhost:3000](http://localhost:3000)
 *   **Username**: `admin`
-*   **Password**: `adminpassword`
+*   **Password**: nilai `ADMIN_PASSWORD` dari `.env`
+
+Untuk deployment full-Docker di VPS, baca [DEPLOYMENT.md](DEPLOYMENT.md).

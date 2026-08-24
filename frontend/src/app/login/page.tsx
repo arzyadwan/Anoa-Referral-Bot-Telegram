@@ -1,37 +1,43 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { KeyRound, User, AlertCircle, Loader2 } from 'lucide-react';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { KeyRound, User, AlertCircle, Loader2 } from "lucide-react";
+import { getErrorMessage } from "../../lib/api";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
-      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001') + '/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, pass: password }),
-      });
+      const response = await fetch(
+        (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001") +
+          "/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, pass: password }),
+        },
+      );
 
       if (!response.ok) {
-        throw new Error('Username atau password salah.');
+        throw new Error("Username atau password salah.");
       }
 
       const data = await response.json();
-      localStorage.setItem('admin_token', data.access_token);
-      router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Koneksi ke server gagal.');
+      localStorage.setItem("admin_token", data.access_token);
+      router.push("/dashboard");
+    } catch (error: unknown) {
+      setError(getErrorMessage(error, "Koneksi ke server gagal."));
     } finally {
       setLoading(false);
     }
@@ -47,7 +53,13 @@ export default function LoginPage() {
         <div className="bg-[#161616]/80 backdrop-blur-md border border-white/5 rounded-2xl p-8 shadow-2xl">
           {/* Logo / Header */}
           <div className="text-center mb-8 flex flex-col items-center">
-            <img src="/logo.jpg" alt="ANOA Logo" className="w-20 h-20 rounded-full border border-[#C59B27]/40 object-cover shadow-lg shadow-[#C59B27]/10 mb-4" />
+            <Image
+              src="/logo.jpg"
+              alt="ANOA Logo"
+              width={80}
+              height={80}
+              className="w-20 h-20 rounded-full border border-[#C59B27]/40 object-cover shadow-lg shadow-[#C59B27]/10 mb-4"
+            />
             <div className="flex flex-col items-center">
               <span className="text-3xl font-black tracking-[0.15em] bg-gradient-to-r from-[#C59B27] via-[#E5C07B] to-[#C59B27] bg-clip-text text-transparent uppercase leading-none">
                 ANOA
@@ -56,7 +68,9 @@ export default function LoginPage() {
                 Dashboard
               </span>
             </div>
-            <p className="text-xs text-gray-500 mt-4 tracking-wider uppercase">Masuk ke Dasbor Admin</p>
+            <p className="text-xs text-gray-500 mt-4 tracking-wider uppercase">
+              Masuk ke Dasbor Admin
+            </p>
           </div>
 
           {error && (

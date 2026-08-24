@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma, UserStatus } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { SettingsService } from '../settings/settings.service';
 import { BotService } from '../bot/bot.service';
@@ -12,7 +13,9 @@ export class AdminService {
   ) {}
 
   // Helper to map BigInt to String in objects
-  private mapUserBigInt(user: any) {
+  private mapUserBigInt<T extends { telegramId: bigint }>(
+    user: T | null,
+  ): (Omit<T, 'telegramId'> & { telegramId: string }) | null {
     if (!user) return user;
     return {
       ...user,
@@ -23,12 +26,18 @@ export class AdminService {
   // Admin dashboard analytics
   async getAnalytics() {
     const totalUsers = await this.prisma.user.count();
-    
+
     // Referrals stats
     const totalReferrals = await this.prisma.referral.count();
-    const validReferrals = await this.prisma.referral.count({ where: { status: 'VALID' } });
-    const pendingReferrals = await this.prisma.referral.count({ where: { status: 'PENDING' } });
-    const invalidReferrals = await this.prisma.referral.count({ where: { status: 'INVALID' } });
+    const validReferrals = await this.prisma.referral.count({
+      where: { status: 'VALID' },
+    });
+    const pendingReferrals = await this.prisma.referral.count({
+      where: { status: 'PENDING' },
+    });
+    const invalidReferrals = await this.prisma.referral.count({
+      where: { status: 'INVALID' },
+    });
 
     // Active Users (DAU / WAU)
     const today = new Date();
@@ -54,7 +63,8 @@ export class AdminService {
       },
     });
 
-    const validationRate = totalReferrals > 0 ? (validReferrals / totalReferrals) * 100 : 0;
+    const validationRate =
+      totalReferrals > 0 ? (validReferrals / totalReferrals) * 100 : 0;
 
     // Growth Chart (last 30 days)
     const chartData = [];
@@ -73,7 +83,10 @@ export class AdminService {
         },
       });
 
-      const formattedDate = startOfDay.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+      const formattedDate = startOfDay.toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'short',
+      });
       chartData.push({ date: formattedDate, count });
     }
 
@@ -93,9 +106,9 @@ export class AdminService {
   }
 
   // Users Management
-  async getUsers(search: string = '', status: string = '') {
-    const whereClause: any = {};
-    
+  async getUsers(search = '', status: UserStatus | '' = '') {
+    const whereClause: Prisma.UserWhereInput = {};
+
     if (search) {
       whereClause.OR = [
         { username: { contains: search, mode: 'insensitive' } },
@@ -158,7 +171,11 @@ export class AdminService {
     }));
   }
 
-  async overrideReferralStatus(id: number, status: 'VALID' | 'INVALID' | 'PENDING', failReason?: string) {
+  async overrideReferralStatus(
+    id: number,
+    status: 'VALID' | 'INVALID' | 'PENDING',
+    failReason?: string,
+  ) {
     const referral = await this.prisma.referral.update({
       where: { id },
       data: {
@@ -186,13 +203,27 @@ export class AdminService {
     });
   }
 
-  async createTask(data: { title: string; description: string; type: 'JOIN_CHANNEL' | 'SEND_MESSAGES' | 'CUSTOM'; telegramChatId?: string }) {
+  async createTask(data: {
+    title: string;
+    description: string;
+    type: 'JOIN_CHANNEL' | 'SEND_MESSAGES' | 'CUSTOM';
+    telegramChatId?: string;
+  }) {
     return this.prisma.task.create({
       data,
     });
   }
 
-  async updateTask(id: number, data: { title?: string; description?: string; type?: 'JOIN_CHANNEL' | 'SEND_MESSAGES' | 'CUSTOM'; telegramChatId?: string; isActive?: boolean }) {
+  async updateTask(
+    id: number,
+    data: {
+      title?: string;
+      description?: string;
+      type?: 'JOIN_CHANNEL' | 'SEND_MESSAGES' | 'CUSTOM';
+      telegramChatId?: string;
+      isActive?: boolean;
+    },
+  ) {
     return this.prisma.task.update({
       where: { id },
       data,

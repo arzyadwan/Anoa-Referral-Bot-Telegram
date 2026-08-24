@@ -14,8 +14,17 @@ async function main() {
   const settings = await prisma.setting.findMany();
 
   console.log('--- USERS IN DB ---');
-  console.log(users.map(u => ({ id: u.id, telegramId: u.telegramId.toString(), username: u.username, referralCode: u.referralCode, inviteLink: u.inviteLink, invitedById: u.invitedById })));
-  
+  console.log(
+    users.map((u) => ({
+      id: u.id,
+      telegramId: u.telegramId.toString(),
+      username: u.username,
+      referralCode: u.referralCode,
+      inviteLink: u.inviteLink,
+      invitedById: u.invitedById,
+    })),
+  );
+
   console.log('--- REFERRALS IN DB ---');
   console.log(referrals);
 

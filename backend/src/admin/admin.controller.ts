@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Put, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { UserStatus } from '@prisma/client';
 import { AdminService } from './admin.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -13,12 +25,18 @@ export class AdminController {
   }
 
   @Get('users')
-  getUsers(@Query('search') search?: string, @Query('status') status?: string) {
-    return this.adminService.getUsers(search, status);
+  getUsers(
+    @Query('search') search?: string,
+    @Query('status') status?: UserStatus,
+  ) {
+    return this.adminService.getUsers(search, status ?? '');
   }
 
   @Patch('users/:id/status')
-  updateUserStatus(@Param('id') id: string, @Body('status') status: 'ACTIVE' | 'BANNED' | 'FLAGGED') {
+  updateUserStatus(
+    @Param('id') id: string,
+    @Body('status') status: 'ACTIVE' | 'BANNED' | 'FLAGGED',
+  ) {
     return this.adminService.updateUserStatus(parseInt(id, 10), status);
   }
 
@@ -38,7 +56,11 @@ export class AdminController {
     @Body('status') status: 'VALID' | 'INVALID' | 'PENDING',
     @Body('failReason') failReason?: string,
   ) {
-    return this.adminService.overrideReferralStatus(parseInt(id, 10), status, failReason);
+    return this.adminService.overrideReferralStatus(
+      parseInt(id, 10),
+      status,
+      failReason,
+    );
   }
 
   @Get('tasks')
@@ -48,7 +70,13 @@ export class AdminController {
 
   @Post('tasks')
   createTask(
-    @Body() body: { title: string; description: string; type: 'JOIN_CHANNEL' | 'SEND_MESSAGES' | 'CUSTOM'; telegramChatId?: string },
+    @Body()
+    body: {
+      title: string;
+      description: string;
+      type: 'JOIN_CHANNEL' | 'SEND_MESSAGES' | 'CUSTOM';
+      telegramChatId?: string;
+    },
   ) {
     return this.adminService.createTask(body);
   }
@@ -56,7 +84,14 @@ export class AdminController {
   @Put('tasks/:id')
   updateTask(
     @Param('id') id: string,
-    @Body() body: { title?: string; description?: string; type?: 'JOIN_CHANNEL' | 'SEND_MESSAGES' | 'CUSTOM'; telegramChatId?: string; isActive?: boolean },
+    @Body()
+    body: {
+      title?: string;
+      description?: string;
+      type?: 'JOIN_CHANNEL' | 'SEND_MESSAGES' | 'CUSTOM';
+      telegramChatId?: string;
+      isActive?: boolean;
+    },
   ) {
     return this.adminService.updateTask(parseInt(id, 10), body);
   }

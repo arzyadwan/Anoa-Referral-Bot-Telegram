@@ -4,6 +4,10 @@ import { SettingsService } from '../settings/settings.service';
 import { Telegraf } from 'telegraf';
 import { ConfigService } from '@nestjs/config';
 
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
 @Injectable()
 export class ReferralService {
   private readonly logger = new Logger(ReferralService.name);
@@ -83,7 +87,9 @@ export class ReferralService {
           status: 'PENDING',
         },
       });
-      this.logger.log(`Created PENDING referral: Inviter ID ${invitedById} -> Invitee ID ${user.id}`);
+      this.logger.log(
+        `Created PENDING referral: Inviter ID ${invitedById} -> Invitee ID ${user.id}`,
+      );
     }
 
     return { user, isNew: true };
@@ -113,14 +119,18 @@ export class ReferralService {
 
     // Avoid self-referral
     if (inviter.telegramId === telegramId) {
-      this.logger.log(`User ${telegramId} attempted self-referral via link, ignoring.`);
+      this.logger.log(
+        `User ${telegramId} attempted self-referral via link, ignoring.`,
+      );
       return;
     }
 
     if (user) {
       // If user exists and already has an inviter, do nothing
       if (user.invitedById) {
-        this.logger.log(`User ${telegramId} already has an inviter, ignoring referral join.`);
+        this.logger.log(
+          `User ${telegramId} already has an inviter, ignoring referral join.`,
+        );
         return;
       }
 
@@ -139,7 +149,9 @@ export class ReferralService {
         },
       });
 
-      this.logger.log(`Linked existing user ${telegramId} to inviter ${inviter.id} via invite link`);
+      this.logger.log(
+        `Linked existing user ${telegramId} to inviter ${inviter.id} via invite link`,
+      );
       return;
     }
 
@@ -169,7 +181,9 @@ export class ReferralService {
       },
     });
 
-    this.logger.log(`Created PENDING referral via Direct Link: Inviter ID ${inviter.id} -> Invitee ID ${user.id}`);
+    this.logger.log(
+      `Created PENDING referral via Direct Link: Inviter ID ${inviter.id} -> Invitee ID ${user.id}`,
+    );
   }
 
   // Record a group chat message to track activity
@@ -199,7 +213,9 @@ export class ReferralService {
   }
 
   // Record daily check-in
-  async recordDailyCheckin(telegramId: bigint): Promise<{ success: boolean; message: string }> {
+  async recordDailyCheckin(
+    telegramId: bigint,
+  ): Promise<{ success: boolean; message: string }> {
     const user = await this.prisma.user.findUnique({
       where: { telegramId },
     });
@@ -219,7 +235,7 @@ export class ReferralService {
         },
       });
       return { success: true, message: 'Daily check-in successful!' };
-    } catch (e) {
+    } catch {
       return { success: false, message: 'You have already checked in today.' };
     }
   }
@@ -247,16 +263,21 @@ export class ReferralService {
     for (const ref of pendingReferrals) {
       try {
         const invitee = ref.invitee;
-        
+
         // 1. Check Channel/Group Membership
         let isMember = false;
         if (this.bot && channelUsername) {
           try {
-            const chatMember = await this.bot.telegram.getChatMember(channelUsername, Number(invitee.telegramId));
+            const chatMember = await this.bot.telegram.getChatMember(
+              channelUsername,
+              Number(invitee.telegramId),
+            );
             const status = chatMember.status;
             isMember = ['member', 'administrator', 'creator'].includes(status);
           } catch (err) {
-            this.logger.warn(`Failed to check chat member status for user ${invitee.telegramId} in ${channelUsername}: ${err.message}`);
+            this.logger.warn(
+              `Failed to check chat member status for user ${invitee.telegramId} in ${channelUsername}: ${getErrorMessage(err)}`,
+            );
             // If checking fails, keep pending
             continue;
           }
@@ -268,7 +289,9 @@ export class ReferralService {
         if (!isMember) {
           await this.prisma.referral.update({
             where: { id: ref.id },
-            data: { failReason: `User is not a member of required channel ${channelUsername}` },
+            data: {
+              failReason: `User is not a member of required channel ${channelUsername}`,
+            },
           });
           continue;
         }
@@ -281,7 +304,9 @@ export class ReferralService {
         if (diffHours < minStayHours) {
           await this.prisma.referral.update({
             where: { id: ref.id },
-            data: { failReason: `Stay duration insufficient. ${diffHours.toFixed(1)}/${minStayHours} hours` },
+            data: {
+              failReason: `Stay duration insufficient. ${diffHours.toFixed(1)}/${minStayHours} hours`,
+            },
           });
           continue;
         }
@@ -300,7 +325,9 @@ export class ReferralService {
         if (totalMessages < minMessages) {
           await this.prisma.referral.update({
             where: { id: ref.id },
-            data: { failReason: `Message count insufficient. ${totalMessages}/${minMessages} messages` },
+            data: {
+              failReason: `Message count insufficient. ${totalMessages}/${minMessages} messages`,
+            },
           });
           continue;
         }
@@ -315,22 +342,27 @@ export class ReferralService {
           },
         });
 
-        this.logger.log(`Referral VALIDATED: Inviter ${ref.inviter.username || ref.inviter.telegramId} <- Invitee ${invitee.username || invitee.telegramId}`);
+        this.logger.log(
+          `Referral VALIDATED: Inviter ${ref.inviter.username || ref.inviter.telegramId} <- Invitee ${invitee.username || invitee.telegramId}`,
+        );
 
         // Notify inviter via bot if available
         if (this.bot) {
           try {
             await this.bot.telegram.sendMessage(
               Number(ref.inviter.telegramId),
-              `🎉 Selamat! Rujukan Anda untuk @${invitee.username || invitee.firstName || 'user'} telah divalidasi dan sekarang berstatus VALID.`
+              `🎉 Selamat! Rujukan Anda untuk @${invitee.username || invitee.firstName || 'user'} telah divalidasi dan sekarang berstatus VALID.`,
             );
-          } catch (e) {
-            this.logger.warn(`Could not notify inviter ${ref.inviter.telegramId}: ${e.message}`);
+          } catch (error) {
+            this.logger.warn(
+              `Could not notify inviter ${ref.inviter.telegramId}: ${getErrorMessage(error)}`,
+            );
           }
         }
-
-      } catch (err) {
-        this.logger.error(`Error validating referral ID ${ref.id}: ${err.message}`);
+      } catch (error) {
+        this.logger.error(
+          `Error validating referral ID ${ref.id}: ${getErrorMessage(error)}`,
+        );
       }
     }
   }
